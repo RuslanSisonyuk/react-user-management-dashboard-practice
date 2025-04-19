@@ -103,23 +103,11 @@ function App() {
                   <label htmlFor="Name" className="text-right">
                     Name
                   </label>
-                  <Input id="Name" value={newUser?.name} className="col-span-3" onChange={e=>{setNewUser({...newUser, name:e.target.value})}}/>
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="Email" className="text-right">
-                    Email
-                  </label>
-                  <Input id="Email" value={newUser?.email} className="col-span-3"  onChange={e=>{setNewUser({...newUser, email:e.target.value})}}/>
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="Role" className="text-right">
-                    Role
-                  </label>
-                  <Input id="Role" value={newUser?.role} className="col-span-3"  onChange={e=>{setNewUser({...newUser, role:e.target.value})}}/>
+                  <input id="Name" {...form} className="col-span-3" />
                 </div>
               </form>
             <DialogFooter>
-              <Button type='submit' onClick={()=>addNewUser()}>Submit</Button>
+              <Button type='submit'>Submit</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
