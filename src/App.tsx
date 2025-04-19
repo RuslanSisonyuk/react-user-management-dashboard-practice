@@ -9,69 +9,33 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod'; 
 import Navbar from './components/ui/Navbar';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './components/ui/form';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
-
-interface user{
-  id?: string;
-  name?: string;
-  email?: string;
-  role?: string;
-}
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must have at least 2 characters"
-  }),
-  email: z.string().email({
-    message: "Enter a valid email address"
-  }),
-  role: z.string().min(2, {
-    message: "Role must have at least 2 characters"
-  }),
-})
+import UserFormDialog from './components/ui/UserFormDialog';
+import {user} from './types/userType';
 
 
 function App() {
-  const [newUser, setNewUser] = useState<user>();
-  const [existingUser, setExistingUser] = useState<user>();
   const [users, setUsers] = useState<user[]>(usersJson);
-  
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name:"",
-      email:"",
-      role:""
-    }
-  });
-  function onSubmit(values: z.infer<typeof formSchema>) {
+
+  let test:user = {id:"",name:"",email:"",role:""};  
+
+  const onSubmitAddUser = (values: user) => {
     let randomUserId = crypto.randomUUID();
     setUsers([...users,{...values,id:randomUserId}]);
-    form.reset()
   }
 
   useEffect(()=>{
     localStorage.setItem("users",JSON.stringify(users));
   },[users]);
 
-  function updateUser(){
+  const updateUser = (values: user) => {
     let tempUsers = users;
-    let index = tempUsers.findIndex(user => user.id == existingUser?.id);
-    tempUsers[index].id = existingUser?.id;
-    tempUsers[index].name = existingUser?.name;
-    tempUsers[index].email = existingUser?.email;
-    tempUsers[index].role = existingUser?.role;
+    let index = tempUsers.findIndex(user => user.id == values.id);
+    tempUsers[index].id = values.id;
+    tempUsers[index].name = values.name;
+    tempUsers[index].email = values.email;
+    tempUsers[index].role = values.role;
     setUsers([...tempUsers]);
   }
-
-  function addNewUser(){
-    let newId = crypto.randomUUID();
-    setUsers([...users,{...newUser, id: newId}]);
-    setNewUser({id:"",name:"",email:"",role:""});
-  }
-
-
 
   return(
     <>
@@ -79,74 +43,7 @@ function App() {
 
     <div className='flex flex-col px-9'>
       <div className='flex flex-row'>
-        <Dialog>
-          <DialogTrigger>
-            <Button>New User</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Profile</DialogTitle>
-              <DialogDescription>
-                Add in the details of the new profile. Click submit when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            <Form { ...form }>
-              <form className="grid gap-4 py-4" onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                  control={ form.control }
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input { ...field }></Input>
-                      </FormControl>
-                      <FormMessage/>
-                    </FormItem> 
-                  )}
-                />
-                <FormField
-                  control={ form.control }
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input { ...field }></Input>
-                      </FormControl>
-                      <FormMessage/>
-                    </FormItem> 
-                  )}
-                />
-                <FormField
-                  control={ form.control }
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Role</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a role"/>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value='Viewer'>Viewer</SelectItem>
-                          <SelectItem value='Editor'>Editor</SelectItem>
-                          <SelectItem value='Admin'>Admin</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage/>
-                    </FormItem> 
-                  )}
-                />
-              <DialogFooter>
-                <Button type='submit' onClick={()=>{console.log("Form errors:", form.formState.errors)}}>Submit</Button>
-              </DialogFooter>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
+        <UserFormDialog onSubmit={onSubmitAddUser} userAttributes={test} type='add'/>
       </div>
 
       <Table>
@@ -168,7 +65,7 @@ function App() {
               <TableCell>{users[1].role}</TableCell>
               <TableCell><img src="src/assets/icons/dotsIcon.png" alt="Actions" className='size-[20px]'/>
               <div className='flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2'>
-                <Dialog>
+                {/* <Dialog>
                   <DialogTrigger>
                     <Button variant="secondary" size="sm" onClick={()=>{setExistingUser(users[1])}}>Edit</Button>
                   </DialogTrigger>
@@ -203,7 +100,8 @@ function App() {
                       <Button type='submit' onClick={()=>updateUser()}>Submit Changes</Button>
                     </DialogFooter>
                   </DialogContent>
-                </Dialog>
+                </Dialog> */}
+                <UserFormDialog onSubmit={updateUser} userAttributes={users[1]} type='edit'/>
                 <Button variant="destructive" size="sm">Delete</Button>
               </div>
               </TableCell>
