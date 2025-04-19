@@ -10,6 +10,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod'; 
 import Navbar from './components/ui/Navbar';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
 
 interface user{
   id?: string;
@@ -19,16 +20,13 @@ interface user{
 }
 
 const formSchema = z.object({
-  id: z.string().min(2, {
-    message: "Id must have at least 2 characters"
-  }),
-  name: z.string().min(4, {
+  name: z.string().min(2, {
     message: "Name must have at least 2 characters"
   }),
   email: z.string().email({
     message: "Enter a valid email address"
   }),
-  role: z.string().min(4, {
+  role: z.string().min(2, {
     message: "Role must have at least 2 characters"
   }),
 })
@@ -42,26 +40,16 @@ function App() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id:"",
       name:"",
       email:"",
       role:""
     }
   });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Process form data
-    console.log(values)
-
-    // Close the dialog after successful submission
-    // setOpen(false)
-
     let randomUserId = crypto.randomUUID();
     setUsers([...users,{...values,id:randomUserId}]);
-
-    // Reset the form
     form.reset()
   }
-  let dummyUser:user = {id:"2",name:"2",email:"1",role:"moderator"} 
 
   useEffect(()=>{
     localStorage.setItem("users",JSON.stringify(users));
@@ -136,15 +124,24 @@ function App() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Role</FormLabel>
-                      <FormControl>
-                        <Input { ...field }></Input>
-                      </FormControl>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a role"/>
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value='Viewer'>Viewer</SelectItem>
+                          <SelectItem value='Editor'>Editor</SelectItem>
+                          <SelectItem value='Admin'>Admin</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage/>
                     </FormItem> 
                   )}
                 />
               <DialogFooter>
-                <Button type='submit'>Submit</Button>
+                <Button type='submit' onClick={()=>{console.log("Form errors:", form.formState.errors)}}>Submit</Button>
               </DialogFooter>
               </form>
             </Form>
