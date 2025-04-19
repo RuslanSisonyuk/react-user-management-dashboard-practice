@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod'; 
 import Navbar from './components/ui/Navbar';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './components/ui/form';
 
 interface user{
   id?: string;
@@ -19,15 +20,15 @@ interface user{
 
 const formSchema = z.object({
   id: z.string().min(2, {
-    message: "Name must have at least 2 characters"
+    message: "Id must have at least 2 characters"
   }),
-  name: z.string().min(2, {
+  name: z.string().min(4, {
     message: "Name must have at least 2 characters"
   }),
   email: z.string().email({
     message: "Enter a valid email address"
   }),
-  role: z.string().min(2, {
+  role: z.string().min(4, {
     message: "Role must have at least 2 characters"
   }),
 })
@@ -41,7 +42,7 @@ function App() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      id:"123",
+      id:"",
       name:"",
       email:"",
       role:""
@@ -53,6 +54,9 @@ function App() {
 
     // Close the dialog after successful submission
     // setOpen(false)
+
+    let randomUserId = crypto.randomUUID();
+    setUsers([...users,{...values,id:randomUserId}]);
 
     // Reset the form
     form.reset()
@@ -98,17 +102,52 @@ function App() {
                 Add in the details of the new profile. Click submit when you're done.
               </DialogDescription>
             </DialogHeader>
+            <Form { ...form }>
               <form className="grid gap-4 py-4" onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor="Name" className="text-right">
-                    Name
-                  </label>
-                  <input id="Name" {...form} className="col-span-3" />
-                </div>
+                <FormField
+                  control={ form.control }
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input { ...field }></Input>
+                      </FormControl>
+                      <FormMessage/>
+                    </FormItem> 
+                  )}
+                />
+                <FormField
+                  control={ form.control }
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input { ...field }></Input>
+                      </FormControl>
+                      <FormMessage/>
+                    </FormItem> 
+                  )}
+                />
+                <FormField
+                  control={ form.control }
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Role</FormLabel>
+                      <FormControl>
+                        <Input { ...field }></Input>
+                      </FormControl>
+                      <FormMessage/>
+                    </FormItem> 
+                  )}
+                />
+              <DialogFooter>
+                <Button type='submit'>Submit</Button>
+              </DialogFooter>
               </form>
-            <DialogFooter>
-              <Button type='submit'>Submit</Button>
-            </DialogFooter>
+            </Form>
           </DialogContent>
         </Dialog>
       </div>
