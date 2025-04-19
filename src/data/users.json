@@ -1,0 +1,32 @@
+[
+    {
+        "id": "u41iu32ri2",
+        "name": "name1",
+        "email": "mylongEmail@gmail.com",
+        "role": "Admin"
+    },
+    {
+        "id": "i124h3r2bk",
+        "name": "name2",
+        "email": "mylongEmail@gmail.com",
+        "role": "Editor"
+    },
+    {
+        "id": "13842t3rh",
+        "name": "name3",
+        "email": "mylongEmail@gmail.com",
+        "role": "Viewer"
+    },
+    {
+        "id": "012y32ehk",
+        "name": "Marat Bombaclat",
+        "email": "mylongEmail@gmail.com",
+        "role": "Viewer"
+    },
+    {
+        "id": "dlsajkb32",
+        "name": "name5",
+        "email": "mylongEmail@gmail.com",
+        "role": "Editor"
+    }
+]
