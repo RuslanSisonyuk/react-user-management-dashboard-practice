@@ -30,6 +30,7 @@ interface UserProps{
 
 
 export default function UserFormDialog(props:UserProps){
+    const [isOpen,setOpen] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -43,7 +44,7 @@ export default function UserFormDialog(props:UserProps){
     function onSubmitt(values:z.infer<typeof formSchema>){
         props.onSubmit({...values,id:props.userAttributes.id});
         if(props.type!="edit") form.reset();
-        //else
+        setOpen(false);
     }
 
     function setButton(){
@@ -60,7 +61,7 @@ export default function UserFormDialog(props:UserProps){
     }
 
     return(
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setOpen}>
           <DialogTrigger>
             {setButton()}
           </DialogTrigger>

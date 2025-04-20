@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Navbar from './components/ui/Navbar';
 import UserFormDialog from './components/ui/UserFormDialog';
 import {user} from './types/userType';
+import TableRowActions from './components/ui/TableRowActions';
 
 
 function App() {
@@ -63,48 +64,7 @@ function App() {
               <TableCell>{users[1].name}</TableCell>
               <TableCell>{users[1].email}</TableCell>
               <TableCell>{users[1].role}</TableCell>
-              <TableCell><img src="src/assets/icons/dotsIcon.png" alt="Actions" className='size-[20px]'/>
-              <div className='flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2'>
-                {/* <Dialog>
-                  <DialogTrigger>
-                    <Button variant="secondary" size="sm" onClick={()=>{setExistingUser(users[1])}}>Edit</Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Edit Profile</DialogTitle>
-                      <DialogDescription>
-                        Make changes to the profile here. Click submit when you're done.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="Name" className="text-right">
-                          Name
-                        </label>
-                        <Input id="Name" value={existingUser?.name} className="col-span-3" onChange={e=>{setExistingUser({...existingUser, name:e.target.value})}}/>
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="Email" className="text-right">
-                          Email
-                        </label>
-                        <Input id="Email" value={existingUser?.email} className="col-span-3"  onChange={e=>{setExistingUser({...existingUser, email:e.target.value})}}/>
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <label htmlFor="Role" className="text-right">
-                          Role
-                        </label>
-                        <Input id="Role" value={existingUser?.role} className="col-span-3"  onChange={e=>{setExistingUser({...existingUser, role:e.target.value})}}/>
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button type='submit' onClick={()=>updateUser()}>Submit Changes</Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog> */}
-                <UserFormDialog onSubmit={updateUser} userAttributes={users[1]} type='edit'/>
-                <Button variant="destructive" size="sm">Delete</Button>
-              </div>
-              </TableCell>
+              <TableRowActions userUpdater={updateUser} user={users[1]}/>
           </TableRow>
           {users.map(user=>{
             return(<TableRow key={user.id}>
