@@ -17,8 +17,6 @@ import TableRowActions from './components/ui/TableRowActions';
 function App() {
   const [users, setUsers] = useState<user[]>(usersJson);
 
-  let test:user = {id:"",name:"",email:"",role:""};  
-
   const onSubmitAddUser = (values: user) => {
     let randomUserId = crypto.randomUUID();
     setUsers([...users,{...values,id:randomUserId}]);
@@ -28,7 +26,7 @@ function App() {
     localStorage.setItem("users",JSON.stringify(users));
   },[users]);
 
-  const updateUser = (values: user) => {
+  const onSubmitUpdateUser = (values: user) => {
     let tempUsers = users;
     let index = tempUsers.findIndex(user => user.id == values.id);
     tempUsers[index].id = values.id;
@@ -38,13 +36,17 @@ function App() {
     setUsers([...tempUsers]);
   }
 
+  const onSubmitDeleteUser = (values: user) => {
+    setUsers(users.filter((user) => { return user.id !== values.id; }));
+  }
+
   return(
     <>
     <Navbar/>
-
+    
     <div className='flex flex-col px-9'>
       <div className='flex flex-row'>
-        <UserFormDialog onSubmit={onSubmitAddUser} userAttributes={test} type='add'/>
+        <UserFormDialog onSubmit={onSubmitAddUser}/>
       </div>
 
       <Table>
@@ -59,28 +61,13 @@ function App() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow key={users[1].id}>
-              <TableCell>{users[1].id}</TableCell>
-              <TableCell>{users[1].name}</TableCell>
-              <TableCell>{users[1].email}</TableCell>
-              <TableCell>{users[1].role}</TableCell>
-              <TableRowActions userUpdater={updateUser} user={users[1]}/>
-          </TableRow>
           {users.map(user=>{
             return(<TableRow key={user.id}>
               <TableCell>{user.id}</TableCell>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
               <TableCell>{user.role}</TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <img src="src/assets/icons/dotsIcon.png" alt="Actions" className='size-[20px] cursor-pointer'/>
-                </Button>
-              {/* <div className='flex flex-col absolute bottom-[-15] right-0 z-10 rounded-sm bg-[#f0f0f0] p-1'>
-                <Button variant="secondary">Edit</Button>
-                <Button variant="destructive">Delete</Button>
-              </div> */}
-              </TableCell>
+              <TableRowActions onEdit={onSubmitUpdateUser} onDelete={onSubmitDeleteUser} user={user}/>
             </TableRow>);
           })}
         </TableBody>

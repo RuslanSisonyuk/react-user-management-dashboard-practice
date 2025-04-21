@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form'; 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod'; 
@@ -17,46 +17,50 @@ const formSchema = z.object({
       message: "Enter a valid email address"
     }),
     role: z.string().min(2, {
-      message: "Role must have at least 2 characters"
+      message: "Select a role"
     }),
   })
 
 interface UserProps{
     onSubmit: (values:user) => void;
-    type: string;
-    userAttributes: user;
+    type?: string;
+    userAttributes?: user;
 }
+let defaultUser:user = {id:"",name:"",email:"",role:""};  
+let defaultType:string = "add";
 
-
-
-export default function UserFormDialog(props:UserProps){
+//form defaults to the "add user" form
+export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type=defaultType}:UserProps){
     const [isOpen,setOpen] = useState(false);
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-          name:props.userAttributes.name,
-          email:props.userAttributes.email,
-          role:props.userAttributes.role
+          name:userAttributes.name,
+          email:userAttributes.email,
+          role:userAttributes.role
         }
     });
     
-    function onSubmitt(values:z.infer<typeof formSchema>){
-        props.onSubmit({...values,id:props.userAttributes.id});
-        if(props.type!="edit") form.reset();
+    //executes the provided function passing the values from the form, rests the form fields and closes the form
+    function handleFormSubmit(values:z.infer<typeof formSchema>){
+        onSubmit({...values,id:userAttributes.id});
+        if(type!="edit") form.reset();
         setOpen(false);
     }
 
+
+    //settings of the form depending on the provided form type
     function setButton(){
-        if(props.type == "edit") return (<Button variant="secondary" size="sm">Edit</Button>);
+        if(type == "edit") return (<Button variant="secondary" size="sm">Edit</Button>);
         return (<Button>New User</Button>);
     }
     function setTitle(){
-        if(props.type == "edit") return "Edit Profile";
+        if(type == "edit") return "Edit Profile";
         return "Add New Profile";
     }
     function setDescription(){
-        if(props.type == "edit") return "Make changes to the profile here. Click submit when you're done.";
+        if(type == "edit") return "Make changes to the profile here. Click submit when you're done.";
         return "Add in the details of the new profile. Click submit when you're done.";
     }
 
@@ -73,7 +77,7 @@ export default function UserFormDialog(props:UserProps){
               </DialogDescription>
             </DialogHeader>
             <Form { ...form }>
-              <form className="grid gap-4 py-4" onSubmit={form.handleSubmit(onSubmitt)}>
+              <form className="grid gap-4 py-4" onSubmit={form.handleSubmit(handleFormSubmit)}>
                 <FormField
                   control={ form.control }
                   name="name"

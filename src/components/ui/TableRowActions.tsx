@@ -3,27 +3,47 @@ import { Button } from './button';
 import UserFormDialog from './UserFormDialog';
 import { user } from '@/types/userType';
 import { useState } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './alert-dialog';
 
-//props interface
 interface rowProps{
-    userUpdater: (values: user) => void;
+    onEdit: (values: user) => void;
+    onDelete: (values: user) => void;
     user:user;
 }
 
 export default function TableRowActions(props:rowProps){
     const [isOpen,setOpen] = useState(false);
+    
+    
+    
+    function checkIsOpen() { return isOpen; }
 
     return(
         <TableCell>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={()=>{setOpen(!isOpen); console.log(isOpen)}}>
                 <img src="src/assets/icons/dotsIcon.png" alt="Actions" className='size-[20px]'/>
             </Button>
-            <div className='flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2'>
-                <UserFormDialog onSubmit={props.userUpdater} userAttributes={props.user} type='edit'/>
-                <Button variant="destructive" size="sm">Delete</Button>
+            <div className={checkIsOpen() ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden'}> 
+                <UserFormDialog onSubmit={props.onEdit} userAttributes={props.user} type='edit'/>
+                <AlertDialog>
+                    <AlertDialogTrigger>
+                        <Button variant="destructive" size="sm">Delete</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent >
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure you want to delete this entry?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={()=>props.onDelete(props.user)}>Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </TableCell>
     )
 }
-
-//получает польз. и функцию
