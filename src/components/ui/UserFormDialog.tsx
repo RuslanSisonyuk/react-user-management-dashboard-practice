@@ -7,35 +7,25 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { Input } from './input';
 import { Button } from './button';
-import { user } from '@/types/userType';
+import { user, userSchema } from '@/types/userType';
 
-const formSchema = z.object({
-    name: z.string().min(2, {
-      message: "Name must have at least 2 characters"
-    }),
-    email: z.string().email({
-      message: "Enter a valid email address"
-    }),
-    role: z.string().min(2, {
-      message: "Select a role"
-    }),
-  })
 
 interface UserProps{
     onSubmit: (values:user) => void;
     type?: string;
     userAttributes?: user;
 }
-let defaultUser:user = {id:"",name:"",email:"",role:""};  
+let defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:""};  
 let defaultType:string = "add";
 
 //form defaults to the "add user" form
 export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type=defaultType}:UserProps){
     const [isOpen,setOpen] = useState(false);
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof userSchema>>({
+        resolver: zodResolver(userSchema),
         defaultValues: {
+          id:userAttributes.id,
           name:userAttributes.name,
           email:userAttributes.email,
           role:userAttributes.role
@@ -43,7 +33,7 @@ export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type
     });
     
     //executes the provided function passing the values from the form, rests the form fields and closes the form
-    function handleFormSubmit(values:z.infer<typeof formSchema>){
+    function handleFormSubmit(values:z.infer<typeof userSchema>){
         onSubmit({...values,id:userAttributes.id});
         if(type!="edit") form.reset();
         setOpen(false);

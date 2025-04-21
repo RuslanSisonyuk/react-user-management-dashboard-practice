@@ -10,21 +10,30 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod'; 
 import Navbar from './components/ui/Navbar';
 import UserFormDialog from './components/ui/UserFormDialog';
-import {user} from './types/userType';
+import { user,userSchema } from './types/userType';
 import TableRowActions from './components/ui/TableRowActions';
 
 
 function App() {
-  const [users, setUsers] = useState<user[]>(usersJson);
+  const [users, setUsers] = useState<user[]>([]);
+
+
+  //check users validation on page load
+  useEffect(()=>{
+    setUsers(usersJson.filter((user)=>{
+      const result = userSchema.safeParse(user);
+      if(result.success){
+        return user;
+      }
+    }));
+  },[]);
+
+
 
   const onSubmitAddUser = (values: user) => {
     let randomUserId = crypto.randomUUID();
     setUsers([...users,{...values,id:randomUserId}]);
   }
-
-  useEffect(()=>{
-    localStorage.setItem("users",JSON.stringify(users));
-  },[users]);
 
   const onSubmitUpdateUser = (values: user) => {
     let tempUsers = users;
@@ -50,7 +59,6 @@ function App() {
       </div>
 
       <Table>
-        <TableCaption>My table</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead>Id</TableHead>
