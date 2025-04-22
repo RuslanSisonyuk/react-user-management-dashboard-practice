@@ -12,7 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 
 function App() {
   const [users, setUsers] = useState<user[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [filterUsersByString, setFilterUsersByString] = useState('');
+  const [filterType, setfilterType] = useState('name');
 
   //check users validation on page load
   useEffect(()=>{
@@ -31,27 +32,8 @@ function App() {
   }
 
   const onSubmitUpdateUser = (values: user) => {
-    // bro is mutating the fucking state . . .
-    // let tempUsers = users;
-    // let index = tempUsers.findIndex(user => user.id == values.id);
-    // tempUsers[index].id = values.id;
-    // tempUsers[index].name = values.name;
-    // tempUsers[index].email = values.email;
-    // tempUsers[index].role = values.role;
-    
-    // well shit this does that too, still referencing the original array
-    // setUsers(prevUsers => {
-    //   let index = prevUsers.findIndex(user => user.id == values.id);
-    //   prevUsers[index].id = values.id;
-    //   prevUsers[index].name = values.name;
-    //   prevUsers[index].email = values.email;
-    //   prevUsers[index].role = values.role;
-    //   return [...prevUsers];
-    // });
-
-    //there we go! now it creates and passes a new object
     setUsers(prevUsers => {
-      let index = prevUsers.findIndex(user => user.id == values.id);
+      let index = prevUsers.findIndex(user => user.id == values.id);    //find index of the passed user, map the array of objects, returning the users and a new user object with the passed values instead of the old object
       return prevUsers.map((user,i) => {
         if(i !== index) return user;
 
@@ -81,14 +63,20 @@ function App() {
     );
   }
 
+  const filterUser = (user:user) => {
+    if(filterType == "Email")
+      return user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase());
+    return user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
+  }
+
   return(
     <>
     <Navbar/>
     
     <div className='flex flex-col px-9'>
       <div className='flex flex-row w-full max-w-[1000px] gap-[15px]'>
-        <Input onChange={sortUsers}></Input>
-        <Select onValueChange={sortUsers}>  
+        <Input value={filterUsersByString} onChange={e => {setFilterUsersByString(e.target.value)}}></Input>
+        <Select onValueChange={setfilterType}>  
           {/* onValueChange={field.onChange} defaultValue={field.value} */}
             <SelectTrigger>
               <SelectValue placeholder="Filter by"/>
@@ -112,7 +100,7 @@ function App() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map(user=>{
+          {users.filter(user => { return filterUser(user) }).map(user=>{
             return(<TableRow key={user.id}>
               <TableCell>{user.id}</TableCell>
               <TableCell>{user.name}</TableCell>
