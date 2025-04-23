@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from './components/ui/Navbar';
-import { Toaster } from 'sonner';
+import { Toaster, toast } from 'sonner';
 import UsersTable from './components/ui/UsersTable';
 import usersJson from './data/users.json';
 import { userSchema } from './types/userType';
@@ -22,6 +22,7 @@ function App() {
         //findIndex always returns the first element that it finds, so if there's a dupe, the dupe's index is greater than the first found element yee 
         if( usersJson.findIndex( User => User.id == user.id ) != index ) {
           user.id = crypto.randomUUID();
+          console.warn("Duplicate Id at Index: "+index);
         }
 
         return user;

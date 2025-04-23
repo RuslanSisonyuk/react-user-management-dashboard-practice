@@ -79,16 +79,19 @@ export default function UsersTable({ passedUsers } : UserTableProps){
     return(
         <div className='flex flex-col px-9'>
             <div className='flex flex-row w-full max-w-[1000px] gap-[15px]'>
-                <Input value={filterUsersByString} onChange={e => {setFilterUsersByString(e.target.value)}}></Input>
-                <Select onValueChange={setfilterType}>  
-                    <SelectTrigger>
-                        <SelectValue placeholder="Filter by"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                    <SelectItem value='Name'>Name</SelectItem>
-                    <SelectItem value='Email'>Email</SelectItem>
-                    </SelectContent>
-                </Select>
+                <div className="flex flex-row w-full pl-2 bg-[rgba(28, 26, 39, 0.27)] rounded-[3px] border-[2px] border-[#1C1A27] gap-[10px]">
+                    <img src="src/assets/icons/search_icon.svg" alt="search" className="object-contain max-w-[26px] max-sm:hidden"/>
+                    <Input value={filterUsersByString} onChange={e => {setFilterUsersByString(e.target.value)}} className="border-none rounded-[2px]"></Input>
+                    <Select onValueChange={setfilterType}>  
+                        <SelectTrigger className="border-none">
+                            <SelectValue placeholder="Filter by" className="max-sm:hidden"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                        <SelectItem value='Name'>Name</SelectItem>
+                        <SelectItem value='Email'>Email</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
                 <UserFormDialog onSubmit={ onSubmitAddUser }/>
             </div>
     
