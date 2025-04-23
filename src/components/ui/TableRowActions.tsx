@@ -23,11 +23,11 @@ export default function TableRowActions(props:rowProps){
 
     return(
         <TableCell>
-            <Button variant="ghost" size="icon" onClick={()=>{setOpen(!isOpen);}}>
+            <Button variant="ghost" size="icon" onClick={()=>{ setOpen(!isOpen); }}>
                 <img src="src/assets/icons/dotsIcon.png" alt="Actions" className='size-[20px]'/>
             </Button>
             {/* when isOpen state is set to true, sets the Row Actions to be visible, else hides it */}
-            <div className={checkIsOpen() ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden'} ref={dropdownRef}> 
+            <div ref={dropdownRef} className={ checkIsOpen() ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden' }> 
                 <UserFormDialog onSubmit={props.onEdit} userAttributes={props.user} type='edit'/>
                 <AlertDialog>
                     <AlertDialogTrigger>
@@ -42,7 +42,7 @@ export default function TableRowActions(props:rowProps){
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={()=>props.onDelete(props.user)}>Continue</AlertDialogAction>
+                            <AlertDialogAction onClick={ ()=>props.onDelete(props.user) }>Continue</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>

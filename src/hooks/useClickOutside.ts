@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react"
 
 
 function useClickOutside<T extends HTMLElement = HTMLElement>(handler: () => void) {
-  // Create a ref with the correct type
   const ref = useRef<T | null>(null)
 
   useEffect(() => {
@@ -12,10 +11,8 @@ function useClickOutside<T extends HTMLElement = HTMLElement>(handler: () => voi
       }
     }
 
-    // Add event listener
     document.addEventListener("mousedown", handleClickOutside)
-
-    // Clean up the event listener on component unmount
+    // Cleanc up the event listener on component unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
