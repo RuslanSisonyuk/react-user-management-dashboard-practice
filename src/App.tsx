@@ -23,6 +23,7 @@ function App() {
         return user;
       }
     }));
+    // setIsLoading(false);
   },[]);
 
   
@@ -77,7 +78,6 @@ function App() {
       <div className='flex flex-row w-full max-w-[1000px] gap-[15px]'>
         <Input value={filterUsersByString} onChange={e => {setFilterUsersByString(e.target.value)}}></Input>
         <Select onValueChange={setfilterType}>  
-          {/* onValueChange={field.onChange} defaultValue={field.value} */}
             <SelectTrigger>
               <SelectValue placeholder="Filter by"/>
             </SelectTrigger>
@@ -99,17 +99,17 @@ function App() {
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {users.filter(user => { return filterUser(user) }).map(user=>{
-            return(<TableRow key={user.id}>
-              <TableCell>{user.id}</TableCell>
-              <TableCell>{user.name}</TableCell>
-              <TableCell>{user.email}</TableCell>
-              <TableCell>{user.role}</TableCell>
-              <TableRowActions onEdit={onSubmitUpdateUser} onDelete={onSubmitDeleteUser} user={user}/>
-            </TableRow>);
-          })}
-        </TableBody>
+          <TableBody  className='max-sm:text-[0.8rem]'>
+            {users.filter(user => { return filterUser(user) }).map(user=>{
+              return(<TableRow key={user.id}>
+                <TableCell className="overflow-x-auto max-sm:max-w-[60px]">{user.id}</TableCell>
+                <TableCell>{user.name}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableRowActions onEdit={onSubmitUpdateUser} onDelete={onSubmitDeleteUser} user={user}/>
+              </TableRow>);
+            })}
+          </TableBody>
       </Table>
     </div>
   </>
