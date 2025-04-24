@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from './components/ui/Navbar';
-import { Toaster, toast } from 'sonner';
+import { Toaster } from 'sonner';
 import UsersTable from './components/ui/UsersTable';
 import usersJson from './data/users.json';
 import { userSchema } from './types/userType';
