@@ -6,8 +6,8 @@ export default function Navbar(){
                 <p className='align-baseline text-[2rem] self-center font-sg max-sm:text-[1.2rem] text-left'>ConnectSphere Community</p>
             </div>
             <div className='flex flex-row gap-3 justify-items-end'>
-                <img src="src/assets/icons/UserIcon.png" alt="profile" className='self-center size-8' />
-                <img src="src/assets/icons/LogOutIcon.png" alt="log-out" className='self-center size-8'/>
+                <img src="/assets/icons/UserIcon.png" alt="profile" className='self-center size-8' />
+                <img src="/assets/icons/LogOutIcon.png" alt="log-out" className='self-center size-8'/>
             </div>
         </nav>
     );
