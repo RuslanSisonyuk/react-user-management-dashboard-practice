@@ -8,7 +8,7 @@ import { userSchema } from './types/userType';
 
 function App() {
 
-    //check users validation on page load
+    //check users validation on page loadв
     const filteredUsers = usersJson.filter((user,index)=>{
       const result = userSchema.safeParse(user);
 
