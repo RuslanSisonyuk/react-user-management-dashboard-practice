@@ -43,7 +43,7 @@ export default function UsersTable({ passedUsers } : UserTableProps){
 
     //filters out the specified user and passed the result as the new list
     const onSubmitDeleteUser = (values: user) => {
-        setUsers(users.filter((user) => { return user.id !== values.id; }));
+        setUsers(users.filter((user) => user.id !== values.id));
 
         toast("User Data Successfuly Deleted", {
             description: values.name+", "+values.email+", "+values.role
@@ -92,16 +92,15 @@ export default function UsersTable({ passedUsers } : UserTableProps){
                     </TableRow>
                 </TableHeader>
                 <TableBody  className='max-sm:text-[0.8rem]'>
-                {users.filter(user => { return filterUser(user) }).map(user=>{
-                    return(
+                {users.filter(user => filterUser(user)).map(user=>
                         <TableRow key={user.id}>
                             <TableCell className="overflow-x-auto max-sm:max-w-[60px]">{user.id}</TableCell>
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
                             <TableRowActions onEdit={ onSubmitUpdateUser } onDelete={ onSubmitDeleteUser } user={user}/>
-                        </TableRow>);
-                })}
+                        </TableRow>)
+                })
                 </TableBody>
                 <TableCaption className='text-xs'>ConnectSphere® ©</TableCaption>
             </Table>

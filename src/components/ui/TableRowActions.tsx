@@ -17,17 +17,14 @@ export default function TableRowActions(props:rowProps){
     const dropdownRef = useClickOutside<HTMLDivElement>(() => {
         setOpen(false);
     });
-    
-    
-    function checkIsOpen() { return isOpen; }
 
     return(
         <TableCell>
-            <Button variant="ghost" size="icon" onClick={()=>{ setOpen(!isOpen); }}>
+            <Button variant="ghost" size="icon" onClick={()=>setOpen(!isOpen)}>
                 <img src="/assets/icons/dotsIcon.png" alt="Actions" className='size-[20px]'/>
             </Button>
             {/* when isOpen state is set to true, sets the Row Actions to be visible, else hides it */}
-            <div ref={dropdownRef} className={ checkIsOpen() ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden' }> 
+            <div ref={dropdownRef} className={ isOpen ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden' }> 
                 <UserFormDialog onSubmit={props.onEdit} userAttributes={props.user} type='edit'/>
                 <AlertDialog>
                     <AlertDialogTrigger>
