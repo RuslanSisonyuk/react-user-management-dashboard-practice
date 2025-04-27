@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-import { Input } from "./input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
+import { Input } from "./ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 interface SearchBarProps{
     filterValue:string ,

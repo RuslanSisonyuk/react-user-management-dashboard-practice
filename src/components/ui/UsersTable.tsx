@@ -4,7 +4,7 @@ import UserFormDialog from "./UserFormDialog";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import { user } from "@/types/userType";
 import { toast } from "sonner";
-import { UsersSearchbar } from "./UsersSearchbar";
+import { UsersSearchbar } from "../UsersSearchbar";
 
 
 interface UserTableProps{
