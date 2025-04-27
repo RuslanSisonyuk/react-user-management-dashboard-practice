@@ -25,7 +25,7 @@ export default function TableRowActions(props:rowProps){
             </Button>
             {/* when isOpen state is set to true, sets the Row Actions to be visible, else hides it */}
             <div ref={dropdownRef} className={ isOpen ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden' }> 
-                <UserFormDialog onSubmit={props.onEdit} userAttributes={props.user} type='edit'/>
+                <UserFormDialog onSubmit={props.onEdit} userAttributes={props.user} type='EDIT'/>
                 <AlertDialog>
                     <AlertDialogTrigger>
                         <Button variant="destructive" size="sm">Delete</Button>
