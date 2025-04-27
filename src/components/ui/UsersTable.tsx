@@ -28,10 +28,9 @@ export default function UsersTable({ passedUsers } : UserTableProps){
     }
 
     const onSubmitUpdateUser = (values: user) => {
-        setUsers(prevUsers => {
-            let index = prevUsers.findIndex(user => user.id == values.id);    //finds index of the passed user, maps the array of objects, returning the users and a new user object with the passed values instead of the old object
-            return prevUsers.map((user,i) => {
-            if(i !== index) return user;
+        setUsers(prevUsers => {   //finds index of the passed user, maps the array of objects, returning the users and a new user object with the passed values instead of the old object
+            return prevUsers.map((user) => {
+            if(user.id !== values.id) return user;
 
             return {...user, id:values.id, name:values.name, email:values.email, role:values.role};
             });
