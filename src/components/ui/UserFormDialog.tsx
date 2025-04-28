@@ -9,14 +9,17 @@ import { Input } from './input';
 import { Button } from './button';
 import { user, userSchema } from '@/types/userType';
 
-
+enum types {
+  edit = "EDIT",
+  add = "ADD"
+}
 interface UserProps{
     onSubmit: (values:user) => void;
     type?: string;
     userAttributes?: user;
 }
-let defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:""};  
-let defaultType:string = "ADD";
+let defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:"Viewer"};  
+let defaultType:string = types.add;
 
 //form defaults to the "add user" form
 export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type=defaultType}:UserProps){
@@ -35,22 +38,22 @@ export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type
     //executes the provided function passing the values from the form, rests the form fields and closes the form
     function handleFormSubmit(values:z.infer<typeof userSchema>){
         onSubmit({...values,id:userAttributes.id});
-        if(type!="EDIT") form.reset();
+        if(type!=types.edit) form.reset();
         setOpen(false);
     }
 
 
     //settings of the form depending on the provided form type
     function setButton(){
-        if(type == "EDIT") return (<Button variant="secondary" size="sm">Edit</Button>);
+        if(type == types.edit) return (<Button variant="secondary" size="sm">Edit</Button>);
         return (<Button>New User</Button>);
     }
     function setTitle(){
-        if(type == "EDIT") return "Edit Profile";
+        if(type == types.edit) return "Edit Profile";
         return "Add New Profile";
     }
     function setDescription(){
-        if(type == "EDIT") return "Make changes to the profile here. Click submit when you're done.";
+        if(type == types.edit) return "Make changes to the profile here. Click submit when you're done.";
         return "Add in the details of the new profile. Click submit when you're done.";
     }
 
