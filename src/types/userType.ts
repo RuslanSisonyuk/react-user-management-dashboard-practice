@@ -7,6 +7,7 @@ import { z } from "zod";
 //     role: string;
 //   }
 
+
 export const userSchema = z.object({
   id: z.string().uuid("Invalid UUID"),
   name: z.string().min(2, {
@@ -15,7 +16,7 @@ export const userSchema = z.object({
   email: z.string().email({
     message: "Enter a valid email address"
   }),
-  role: z.string().min(2, {
+  role: z.enum(["Viewer","Editor","Admin"],{
     message: "Select a role"
   }),
 })

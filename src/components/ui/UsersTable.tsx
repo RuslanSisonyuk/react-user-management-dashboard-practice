@@ -100,7 +100,7 @@ export default function UsersTable({ passedUsers } : UserTableProps){
                             <TableCell>{user.role}</TableCell>
                             <TableRowActions onEdit={ onSubmitUpdateUser } onDelete={ onSubmitDeleteUser } user={user}/>
                         </TableRow>)
-                })
+                }
                 </TableBody>
                 <TableCaption className='text-xs'>ConnectSphere® ©</TableCaption>
             </Table>
