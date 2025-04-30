@@ -8,11 +8,11 @@ import { UsersSearchbar } from "../UsersSearchbar";
 
 
 interface UserTableProps{
-    userData: user[]
+    usersData: user[]
 }
 
-export default function UsersTable({ userData } : UserTableProps){
-    const [users, setUsers] = useState<user[]>(userData);
+export default function UsersTable({ usersData } : UserTableProps){
+    const [users, setUsers] = useState<user[]>(usersData);
     const [filterUsersByString, setFilterUsersByString] = useState('');
     const [filterType, setfilterType] = useState('name');
   
@@ -30,9 +30,8 @@ export default function UsersTable({ userData } : UserTableProps){
     const onSubmitUpdateUser = (values: user) => {
         setUsers(prevUsers => {   //finds index of the passed user, maps the array of objects, returning the users and a new user object with the passed values instead of the old object
             return prevUsers.map((user) => {
-            if(user.id !== values.id) return user;
-
-            return {...user, id:values.id, name:values.name, email:values.email, role:values.role};
+                return user.id !== values.id ? user :
+                {...user, id:values.id, name:values.name, email:values.email, role:values.role};
             });
         });
     
@@ -70,9 +69,8 @@ export default function UsersTable({ userData } : UserTableProps){
     
     // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
     const isUserStartsWithFilterString = (user:user) => {
-        if(filterType == "Email")
-            return user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase());
-        return user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
+        filterType == "Email" ? user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase()) 
+        : user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
     }
       
     return(

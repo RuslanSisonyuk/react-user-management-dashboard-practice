@@ -45,16 +45,13 @@ export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type
 
     //settings of the form depending on the provided form type
     function getButton(){
-        if(type == FormType.edit) return (<Button variant="secondary" size="sm">Edit</Button>);
-        return (<Button>New User</Button>);
+        return type == FormType.edit ? <Button variant="secondary" size="sm">Edit</Button> : <Button>New User</Button>
     }
     function getTitle(){
-        if(type == FormType.edit) return "Edit Profile";
-        return "Add New Profile";
+        return type == FormType.edit ? "Edit Profile" : "Add New Profile"
     }
     function getDescription(){
-        if(type == FormType.edit) return "Make changes to the profile here. Click submit when you're done.";
-        return "Add in the details of the new profile. Click submit when you're done.";
+        return type == FormType.edit ? "Make changes to the profile here. Click submit when you're done." : "Add in the details of the new profile. Click submit when you're done.";
     }
 
     return(
