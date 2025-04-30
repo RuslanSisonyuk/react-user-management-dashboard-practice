@@ -13,7 +13,7 @@ function App() {
   usersJson.map((user,index)=>{
     const result = userSchema.safeParse(user);
     if(result.success){
-
+    
       //check for duplicate id
       //findIndex always returns the first element that it finds, so if there's a dupe, the dupe's index is greater than the first found element yee 
       if( usersJson.findIndex( User => User.id == user.id ) != index ) {

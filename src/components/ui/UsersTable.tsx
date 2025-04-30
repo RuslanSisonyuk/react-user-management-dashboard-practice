@@ -69,7 +69,7 @@ export default function UsersTable({ usersData } : UserTableProps){
     
     // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
     const isUserStartsWithFilterString = (user:user) => {
-        filterType == "Email" ? user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase()) 
+        return filterType == "Email" ? user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase()) 
         : user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
     }
       

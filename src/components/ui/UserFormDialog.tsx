@@ -7,7 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { Input } from './input';
 import { Button } from './button';
-import { user, userSchema } from '@/types/userType';
+import { userRoles, user, userSchema } from '@/types/userType';
 
 enum FormType {
   edit = "EDIT",
@@ -18,7 +18,7 @@ interface UserProps{
     type?: string;
     userAttributes?: user;
 }
-const defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:"Viewer"};  
+const defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:userRoles.Values.Viewer};  
 const defaultType:string = FormType.add;
 
 //form defaults to the "add user" form
@@ -107,9 +107,9 @@ export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value='Viewer'>Viewer</SelectItem>
-                          <SelectItem value='Editor'>Editor</SelectItem>
-                          <SelectItem value='Admin'>Admin</SelectItem>
+                          <SelectItem value={userRoles.Values.Viewer}>Viewer</SelectItem>
+                          <SelectItem value={userRoles.Values.Editor}>Editor</SelectItem>
+                          <SelectItem value={userRoles.Values.Admin}>Admin</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage/>
