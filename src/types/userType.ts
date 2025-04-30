@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-// export interface user{
-//     id: string;
-//     name: string;
-//     email: string;
-//     role: string;
-//   }
-
-
 export const userSchema = z.object({
   id: z.string().uuid("Invalid UUID"),
   name: z.string().min(2, {

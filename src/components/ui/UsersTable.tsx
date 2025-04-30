@@ -8,11 +8,11 @@ import { UsersSearchbar } from "../UsersSearchbar";
 
 
 interface UserTableProps{
-    passedUsers: user[]
+    userData: user[]
 }
 
-export default function UsersTable({ passedUsers } : UserTableProps){
-    const [users, setUsers] = useState<user[]>(passedUsers);
+export default function UsersTable({ userData } : UserTableProps){
+    const [users, setUsers] = useState<user[]>(userData);
     const [filterUsersByString, setFilterUsersByString] = useState('');
     const [filterType, setfilterType] = useState('name');
   
@@ -68,7 +68,8 @@ export default function UsersTable({ passedUsers } : UserTableProps){
         );
     }
     
-    const filterUser = (user:user) => {
+    // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
+    const isUserStartsWithFilterString = (user:user) => {
         if(filterType == "Email")
             return user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase());
         return user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
@@ -92,7 +93,7 @@ export default function UsersTable({ passedUsers } : UserTableProps){
                     </TableRow>
                 </TableHeader>
                 <TableBody  className='max-sm:text-[0.8rem]'>
-                {users.filter(user => filterUser(user)).map(user=>
+                {users.filter(user => isUserStartsWithFilterString(user)).map(user=>
                         <TableRow key={user.id}>
                             <TableCell className="overflow-x-auto max-sm:max-w-[60px]">{user.id}</TableCell>
                             <TableCell>{user.name}</TableCell>

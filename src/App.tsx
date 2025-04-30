@@ -13,12 +13,7 @@ function App() {
   usersJson.map((user,index)=>{
     const result = userSchema.safeParse(user);
     if(result.success){
-      console.log(result.data);
-    
-      // if( user.role!=="Viewer" && user.role!=="Edior" && user.role!=="Admin"){
-      //   user.role = "Viewer"; //set default user role as viewer if role string is faulty
-      // } //maybe can be rewriten with zod?
-    
+      
       //check for duplicate id
       //findIndex always returns the first element that it finds, so if there's a dupe, the dupe's index is greater than the first found element yee 
       if( usersJson.findIndex( User => User.id == user.id ) != index ) {
@@ -35,7 +30,7 @@ function App() {
     <>
     <Navbar/>
     
-    <UsersTable passedUsers={filteredUsers}></UsersTable>
+    <UsersTable userData={filteredUsers}></UsersTable>
 
     <Toaster/>
     </>
