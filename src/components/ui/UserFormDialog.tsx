@@ -18,8 +18,8 @@ interface UserProps{
     type?: string;
     userAttributes?: user;
 }
-let defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:"Viewer"};  
-let defaultType:string = FormType.add;
+const defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:"Viewer"};  
+const defaultType:string = FormType.add;
 
 //form defaults to the "add user" form
 export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type=defaultType}:UserProps){
