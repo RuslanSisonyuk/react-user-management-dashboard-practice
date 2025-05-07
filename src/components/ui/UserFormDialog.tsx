@@ -7,16 +7,19 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { Input } from './input';
 import { Button } from './button';
-import { user, userSchema } from '@/types/userType';
+import { userRoles, user, userSchema } from '@/types/userType';
 
-
+enum FormType {
+  edit = "EDIT",
+  add = "ADD"
+}
 interface UserProps{
     onSubmit: (values:user) => void;
     type?: string;
     userAttributes?: user;
 }
-let defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:""};  
-let defaultType:string = "add";
+const defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:userRoles.Values.Viewer};  
+const defaultType:string = FormType.add;
 
 //form defaults to the "add user" form
 export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type=defaultType}:UserProps){
@@ -35,35 +38,32 @@ export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type
     //executes the provided function passing the values from the form, rests the form fields and closes the form
     function handleFormSubmit(values:z.infer<typeof userSchema>){
         onSubmit({...values,id:userAttributes.id});
-        if(type!="edit") form.reset();
+        if(type!=FormType.edit) form.reset();
         setOpen(false);
     }
 
 
     //settings of the form depending on the provided form type
-    function setButton(){
-        if(type == "edit") return (<Button variant="secondary" size="sm">Edit</Button>);
-        return (<Button>New User</Button>);
+    function getButton(){
+        return type == FormType.edit ? <Button variant="secondary" size="sm">Edit</Button> : <Button>New User</Button>
     }
-    function setTitle(){
-        if(type == "edit") return "Edit Profile";
-        return "Add New Profile";
+    function getTitle(){
+        return type == FormType.edit ? "Edit Profile" : "Add New Profile"
     }
-    function setDescription(){
-        if(type == "edit") return "Make changes to the profile here. Click submit when you're done.";
-        return "Add in the details of the new profile. Click submit when you're done.";
+    function getDescription(){
+        return type == FormType.edit ? "Make changes to the profile here. Click submit when you're done." : "Add in the details of the new profile. Click submit when you're done.";
     }
 
     return(
         <Dialog open={isOpen} onOpenChange={setOpen}>
           <DialogTrigger>
-            {setButton()}
+            { getButton() }
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{setTitle()}</DialogTitle>
+              <DialogTitle>{ getTitle() }</DialogTitle>
               <DialogDescription>
-                {setDescription()}
+                { getDescription() }
               </DialogDescription>
             </DialogHeader>
             <Form { ...form }>
@@ -107,9 +107,9 @@ export default function UserFormDialog({onSubmit,userAttributes=defaultUser,type
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value='Viewer'>Viewer</SelectItem>
-                          <SelectItem value='Editor'>Editor</SelectItem>
-                          <SelectItem value='Admin'>Admin</SelectItem>
+                          <SelectItem value={userRoles.Values.Viewer}>Viewer</SelectItem>
+                          <SelectItem value={userRoles.Values.Editor}>Editor</SelectItem>
+                          <SelectItem value={userRoles.Values.Admin}>Admin</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage/>

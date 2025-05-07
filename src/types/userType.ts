@@ -1,11 +1,8 @@
 import { z } from "zod";
 
-// export interface user{
-//     id: string;
-//     name: string;
-//     email: string;
-//     role: string;
-//   }
+export const userRoles = z.enum(["Viewer","Editor","Admin"],{
+  message: "Select a role"
+})
 
 export const userSchema = z.object({
   id: z.string().uuid("Invalid UUID"),
@@ -15,9 +12,7 @@ export const userSchema = z.object({
   email: z.string().email({
     message: "Enter a valid email address"
   }),
-  role: z.string().min(2, {
-    message: "Select a role"
-  }),
+  role: userRoles,
 })
 
 export type user = z.infer<typeof userSchema>

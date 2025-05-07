@@ -4,15 +4,15 @@ import UserFormDialog from "./UserFormDialog";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./table";
 import { user } from "@/types/userType";
 import { toast } from "sonner";
-import { UsersSearchbar } from "./UsersSearchbar";
+import { UsersSearchbar } from "../UsersSearchbar";
 
 
 interface UserTableProps{
-    passedUsers: user[]
+    usersData: user[]
 }
 
-export default function UsersTable({ passedUsers } : UserTableProps){
-    const [users, setUsers] = useState<user[]>(passedUsers);
+export default function UsersTable({ usersData } : UserTableProps){
+    const [users, setUsers] = useState<user[]>(usersData);
     const [filterUsersByString, setFilterUsersByString] = useState('');
     const [filterType, setfilterType] = useState('name');
   
@@ -28,12 +28,10 @@ export default function UsersTable({ passedUsers } : UserTableProps){
     }
 
     const onSubmitUpdateUser = (values: user) => {
-        setUsers(prevUsers => {
-            let index = prevUsers.findIndex(user => user.id == values.id);    //finds index of the passed user, maps the array of objects, returning the users and a new user object with the passed values instead of the old object
-            return prevUsers.map((user,i) => {
-            if(i !== index) return user;
-
-            return {...user, id:values.id, name:values.name, email:values.email, role:values.role};
+        setUsers(prevUsers => {   //finds index of the passed user, maps the array of objects, returning the users and a new user object with the passed values instead of the old object
+            return prevUsers.map((user) => {
+                return user.id !== values.id ? user :
+                {...user, id:values.id, name:values.name, email:values.email, role:values.role};
             });
         });
     
@@ -44,7 +42,7 @@ export default function UsersTable({ passedUsers } : UserTableProps){
 
     //filters out the specified user and passed the result as the new list
     const onSubmitDeleteUser = (values: user) => {
-        setUsers(users.filter((user) => { return user.id !== values.id; }));
+        setUsers(users.filter((user) => user.id !== values.id));
 
         toast("User Data Successfuly Deleted", {
             description: values.name+", "+values.email+", "+values.role
@@ -69,10 +67,10 @@ export default function UsersTable({ passedUsers } : UserTableProps){
         );
     }
     
-    const filterUser = (user:user) => {
-        if(filterType == "Email")
-            return user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase());
-        return user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
+    // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
+    const isUserStartsWithFilterString = (user:user) => {
+        return filterType == "Email" ? user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase()) 
+        : user.name.toLowerCase().startsWith(filterUsersByString.toLowerCase());
     }
       
     return(
@@ -93,16 +91,15 @@ export default function UsersTable({ passedUsers } : UserTableProps){
                     </TableRow>
                 </TableHeader>
                 <TableBody  className='max-sm:text-[0.8rem]'>
-                {users.filter(user => { return filterUser(user) }).map(user=>{
-                    return(
+                {users.filter(user => isUserStartsWithFilterString(user)).map(user=>
                         <TableRow key={user.id}>
                             <TableCell className="overflow-x-auto max-sm:max-w-[60px]">{user.id}</TableCell>
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
                             <TableRowActions onEdit={ onSubmitUpdateUser } onDelete={ onSubmitDeleteUser } user={user}/>
-                        </TableRow>);
-                })}
+                        </TableRow>)
+                }
                 </TableBody>
                 <TableCaption className='text-xs'>ConnectSphere® ©</TableCaption>
             </Table>
