@@ -1,15 +1,15 @@
 import { TableCell } from './table';
 import { Button } from './button';
 import UserFormDialog from './UserFormDialog';
-import { user } from '@/types/userType';
+import { User } from '@/types/userType';
 import { useState } from 'react';
 import useClickOutside from '@/hooks/useClickOutside';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './alert-dialog';
 
 interface rowProps{
-    onEdit: (values: user) => void;
-    onDelete: (values: user) => void;
-    user:user;
+    onEdit: (values: User) => void;
+    onDelete: (values: User) => void;
+    user:User;
 }
 
 export default function TableRowActions(props:rowProps){

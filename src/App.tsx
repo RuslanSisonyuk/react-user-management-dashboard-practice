@@ -4,7 +4,9 @@ import { Toaster } from 'sonner';
 import UsersTable from './components/UsersTable';
 import usersJson from './data/users.json';
 import { User,userRoles,userSchema } from './types/userType';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
+import { fillUsers } from './state/users/usersSlice';
+import { useDispatch } from 'react-redux';
 
 //check for duplicate id
 //findIndex always returns the first element that it finds, so if there's a dupe, the dupe's index is greater than the first found element yee 
@@ -26,12 +28,22 @@ function parseUsers(){
 }
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(fillUsers(parseUsers()));
+  },[]);
+
   const filteredUsers:User[] = useMemo(() => parseUsers(), []);
+
+
+
   return(
     <>
     <Navbar/>
     
-    <UsersTable usersData={filteredUsers}></UsersTable>
+    <UsersTable/>
+    {/* <UsersTable usersData={filteredUsers}></UsersTable> */}
 
     <Toaster/>
     </>

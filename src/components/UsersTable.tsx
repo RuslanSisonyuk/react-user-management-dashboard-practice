@@ -6,21 +6,23 @@ import { User } from "@/types/userType";
 import { toast } from "sonner";
 import { UsersSearchbar } from "./UsersSearchbar";
 
+import { RootState } from "@/state/store";
+import { useSelector, useDispatch } from "react-redux";
+import { addUser, updateUser, deleteUser, sortUsers } from "@/state/users/usersSlice";
 
-interface UserTableProps{
-    usersData: User[]
-}
 
-export default function UsersTable({ usersData } : UserTableProps){
-    const [users, setUsers] = useState<User[]>(usersData);
+
+export default function UsersTable(){
     const [filterUsersByString, setFilterUsersByString] = useState('');
     const [filterType, setfilterType] = useState('name');
   
-  
+    const users = useSelector((state:RootState) => state.usersState.users);
+    const dispatch = useDispatch();
+
+
     //generates a new uuid for the new user and updates the state with the new entry
     const onSubmitAddUser = (values: User) => {
-        let randomUserId = crypto.randomUUID();
-        setUsers([...users,{...values,id:randomUserId}]);
+        dispatch(addUser(values));
 
         toast("New User Data Successfuly Added", {
             description: values.name+", "+values.email+", "+values.role
@@ -28,12 +30,7 @@ export default function UsersTable({ usersData } : UserTableProps){
     }
 
     const onSubmitUpdateUser = (values: User) => {
-        setUsers(prevUsers => {   //finds index of the passed user, maps the array of objects, returning the users and a new user object with the passed values instead of the old object
-            return prevUsers.map((user) => {
-                return user.id !== values.id ? user :
-                {...user, id:values.id, name:values.name, email:values.email, role:values.role};
-            });
-        });
+        dispatch(updateUser(values));
     
         toast("User Data Successfuly Changed", {
             description: values.name+", "+values.email+", "+values.role
@@ -42,7 +39,7 @@ export default function UsersTable({ usersData } : UserTableProps){
 
     //filters out the specified user and passed the result as the new list
     const onSubmitDeleteUser = (values: User) => {
-        setUsers(users.filter((user) => user.id !== values.id));
+        dispatch(deleteUser(values.id));
 
         toast("User Data Successfuly Deleted", {
             description: values.name+", "+values.email+", "+values.role
@@ -50,21 +47,8 @@ export default function UsersTable({ usersData } : UserTableProps){
     }
     
 
-    const sortUsers = (sortType:string) => {
-        setUsers(prevUsers => {
-            return [...prevUsers].sort((a,b) => {
-              if(sortType==="id")
-                return a.id.localeCompare(b.id);
-              if(sortType==="name")
-                return a.name.localeCompare(b.name);
-              if(sortType==="email")
-                return a.email.localeCompare(b.email);
-              if(sortType==="role")
-                return a.role.localeCompare(b.role);
-              return a.name.localeCompare(b.name);
-            });
-          }
-        );
+    const onClickSortUsers = (sortType:string) => {
+        dispatch(sortUsers(sortType));
     }
     
     // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
@@ -83,10 +67,10 @@ export default function UsersTable({ usersData } : UserTableProps){
             <Table>
                 <TableHeader>
                     <TableRow>
-                    <TableHead onClick={() => sortUsers("id")} className='hover:cursor-pointer'>Id</TableHead>
-                    <TableHead onClick={() => sortUsers("name")} className='hover:cursor-pointer'>Name</TableHead>
-                    <TableHead onClick={() => sortUsers("email")} className='hover:cursor-pointer'>Email</TableHead>
-                    <TableHead onClick={() => sortUsers("role")} className='hover:cursor-pointer'>Role</TableHead>
+                    <TableHead onClick={() => onClickSortUsers("id")} className='hover:cursor-pointer'>Id</TableHead>
+                    <TableHead onClick={() => onClickSortUsers("name")} className='hover:cursor-pointer'>Name</TableHead>
+                    <TableHead onClick={() => onClickSortUsers("email")} className='hover:cursor-pointer'>Email</TableHead>
+                    <TableHead onClick={() => onClickSortUsers("role")} className='hover:cursor-pointer'>Role</TableHead>
                     <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -97,7 +81,8 @@ export default function UsersTable({ usersData } : UserTableProps){
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
-                            <TableRowActions onEdit={ onSubmitUpdateUser } onDelete={ onSubmitDeleteUser } user={user}/>
+                            <TableRowActions onEdit={ onSubmitUpdateUser } onDelete={ onSubmitDeleteUser } user={user}/> 
+                            {/* do these gotta be changed as well? */}
                         </TableRow>)
                 }
                 </TableBody>
