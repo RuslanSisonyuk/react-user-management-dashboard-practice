@@ -15,4 +15,4 @@ export const userSchema = z.object({
   role: userRoles,
 })
 
-export type user = z.infer<typeof userSchema>
+export type User = z.infer<typeof userSchema>

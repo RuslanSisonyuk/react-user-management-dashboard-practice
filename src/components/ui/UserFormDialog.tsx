@@ -7,18 +7,18 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './select';
 import { Input } from './input';
 import { Button } from './button';
-import { userRoles, user, userSchema } from '@/types/userType';
+import { userRoles, User, userSchema } from '@/types/userType';
 
 enum FormType {
   edit = "EDIT",
   add = "ADD"
 }
 interface UserProps{
-    onSubmit: (values:user) => void;
+    onSubmit: (values:User) => void;
     type?: string;
-    userAttributes?: user;
+    userAttributes?: User;
 }
-const defaultUser:user = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:userRoles.Values.Viewer};  
+const defaultUser:User = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:userRoles.Values.Viewer};  
 const defaultType:string = FormType.add;
 
 //form defaults to the "add user" form
