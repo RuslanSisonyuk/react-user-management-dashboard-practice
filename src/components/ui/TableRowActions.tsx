@@ -6,9 +6,13 @@ import { useState } from 'react';
 import useClickOutside from '@/hooks/useClickOutside';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from './alert-dialog';
 
+import { useDispatch } from "react-redux";
+import { deleteUser } from "@/state/users/usersSlice";
+
+
 interface rowProps{
-    onEdit: (values: User) => void;
-    onDelete: (values: User) => void;
+    // onEdit: (values: User) => void;
+    // onDelete: (values: User) => void;
     user:User;
 }
 
@@ -18,6 +22,8 @@ export default function TableRowActions(props:rowProps){
         setOpen(false);
     });
 
+    const dispatch = useDispatch();
+
     return(
         <TableCell>
             <Button variant="ghost" size="icon" onClick={()=>setOpen(!isOpen)}>
@@ -25,7 +31,7 @@ export default function TableRowActions(props:rowProps){
             </Button>
             {/* when isOpen state is set to true, sets the Row Actions to be visible, else hides it */}
             <div ref={dropdownRef} className={ isOpen ? 'flex flex-col absolute bottom-[-15] right-0 z-10 rounded-[3px] bg-[#f0f0f0] p-2' : 'hidden' }> 
-                <UserFormDialog onSubmit={props.onEdit} userAttributes={props.user} type='EDIT'/>
+                <UserFormDialog userAttributes={props.user} type='EDIT'/>
                 <AlertDialog>
                     <AlertDialogTrigger>
                         <Button variant="destructive" size="sm">Delete</Button>
@@ -39,7 +45,7 @@ export default function TableRowActions(props:rowProps){
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={ ()=>props.onDelete(props.user) }>Continue</AlertDialogAction>
+                            <AlertDialogAction onClick={ ()=>dispatch(deleteUser(props.user.id)) }>Continue</AlertDialogAction>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>

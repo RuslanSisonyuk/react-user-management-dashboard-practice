@@ -1,5 +1,6 @@
 import { User, Users } from "@/types/userType";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const initialState: Users = {
@@ -30,6 +31,10 @@ const usersSlice = createSlice({
         addUser: (state, action: PayloadAction<User>) => {
             let randomUserId = crypto.randomUUID();
             state.users.push({...action.payload,id:randomUserId});
+
+            toast("New User Data Successfuly Added", {
+                description: action.payload.name+", "+action.payload.email+", "+action.payload.role
+            });
         },
 
         updateUser: (state, action: PayloadAction<User>) => {
@@ -37,11 +42,23 @@ const usersSlice = createSlice({
             if(index !== -1){
                 state.users[index] = action.payload
             }
+
+            toast("User Data Successfuly Changed", {
+                description: action.payload.name+", "+action.payload.email+", "+action.payload.role
+            });
         },
 
         deleteUser: (state, action: PayloadAction<string>) => {
             let parsedId = emailSchema.safeParse(action.payload);
-            parsedId.success ? state.users = state.users.filter(user => user.id !== action.payload) : console.log("Error in user deletion: " + parsedId.error);
+            if (!parsedId.success) {
+                console.log("Error in user deletion: " + parsedId.error) 
+                return;
+            };
+
+            state.users = state.users.filter(user => user.id !== action.payload);
+            toast("User Data Successfuly Deleted. ", {
+                description: "User ID: " + action.payload
+            });
         },
 
         sortUsers: (state, action: PayloadAction<string>) => {

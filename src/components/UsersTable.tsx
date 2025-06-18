@@ -3,12 +3,11 @@ import TableRowActions from "./ui/TableRowActions";
 import UserFormDialog from "./ui/UserFormDialog";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { User } from "@/types/userType";
-import { toast } from "sonner";
 import { UsersSearchbar } from "./UsersSearchbar";
 
 import { RootState } from "@/state/store";
 import { useSelector, useDispatch } from "react-redux";
-import { addUser, updateUser, deleteUser, sortUsers } from "@/state/users/usersSlice";
+import { sortUsers } from "@/state/users/usersSlice";
 
 
 
@@ -18,38 +17,6 @@ export default function UsersTable(){
   
     const users = useSelector((state:RootState) => state.usersState.users);
     const dispatch = useDispatch();
-
-
-    //generates a new uuid for the new user and updates the state with the new entry
-    const onSubmitAddUser = (values: User) => {
-        dispatch(addUser(values));
-
-        toast("New User Data Successfuly Added", {
-            description: values.name+", "+values.email+", "+values.role
-        });
-    }
-
-    const onSubmitUpdateUser = (values: User) => {
-        dispatch(updateUser(values));
-    
-        toast("User Data Successfuly Changed", {
-            description: values.name+", "+values.email+", "+values.role
-        });
-    }
-
-    //filters out the specified user and passed the result as the new list
-    const onSubmitDeleteUser = (values: User) => {
-        dispatch(deleteUser(values.id));
-
-        toast("User Data Successfuly Deleted", {
-            description: values.name+", "+values.email+", "+values.role
-        });
-    }
-    
-
-    const onClickSortUsers = (sortType:string) => {
-        dispatch(sortUsers(sortType));
-    }
     
     // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
     const isUserStartsWithFilterString = (user:User) => {
@@ -61,16 +28,16 @@ export default function UsersTable(){
         <div className='flex flex-col px-9'>
             <div className='flex flex-row w-full max-w-[1000px] gap-[15px]'>
                 <UsersSearchbar filterValue={filterUsersByString} setFilterValue={setFilterUsersByString} setFilterType={setfilterType}/>
-                <UserFormDialog onSubmit={ onSubmitAddUser }/>
+                <UserFormDialog/>
             </div>
     
             <Table>
                 <TableHeader>
                     <TableRow>
-                    <TableHead onClick={() => onClickSortUsers("id")} className='hover:cursor-pointer'>Id</TableHead>
-                    <TableHead onClick={() => onClickSortUsers("name")} className='hover:cursor-pointer'>Name</TableHead>
-                    <TableHead onClick={() => onClickSortUsers("email")} className='hover:cursor-pointer'>Email</TableHead>
-                    <TableHead onClick={() => onClickSortUsers("role")} className='hover:cursor-pointer'>Role</TableHead>
+                    <TableHead onClick={() => dispatch(sortUsers("id"))} className='hover:cursor-pointer'>Id</TableHead>
+                    <TableHead onClick={() => dispatch(sortUsers("name"))} className='hover:cursor-pointer'>Name</TableHead>
+                    <TableHead onClick={() => dispatch(sortUsers("email"))} className='hover:cursor-pointer'>Email</TableHead>
+                    <TableHead onClick={() => dispatch(sortUsers("role"))} className='hover:cursor-pointer'>Role</TableHead>
                     <TableHead></TableHead>
                     </TableRow>
                 </TableHeader>
@@ -81,7 +48,7 @@ export default function UsersTable(){
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
-                            <TableRowActions onEdit={ onSubmitUpdateUser } onDelete={ onSubmitDeleteUser } user={user}/> 
+                            <TableRowActions user={user}/> 
                             {/* do these gotta be changed as well? */}
                         </TableRow>)
                 }
