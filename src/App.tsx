@@ -4,7 +4,7 @@ import { Toaster } from 'sonner';
 import UsersTable from './components/UsersTable';
 import usersJson from './data/users.json';
 import { User,userRoles,userSchema } from './types/userType';
-import { useEffect, useMemo } from 'react';
+import { useEffect  } from 'react';
 import { fillUsers } from './state/users/usersSlice';
 import { useDispatch } from 'react-redux';
 
@@ -34,16 +34,11 @@ function App() {
     dispatch(fillUsers(parseUsers()));
   },[]);
 
-  const filteredUsers:User[] = useMemo(() => parseUsers(), []);
-
-
-
   return(
     <>
     <Navbar/>
     
     <UsersTable/>
-    {/* <UsersTable usersData={filteredUsers}></UsersTable> */}
 
     <Toaster/>
     </>

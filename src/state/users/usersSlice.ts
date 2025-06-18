@@ -1,21 +1,25 @@
 import { User, Users } from "@/types/userType";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
+import { z } from "zod";
 
 const initialState: Users = {
     users: [{
-        id: "",
-        name: "",
-        email: "",
+        id: "4a9c54a0-4eed-454b-9485-4baba9826f83",
+        name: "tempName",
+        email: "tempEmail@gmail.com",
         role: "Viewer"
     },]
 }
+
+const emailSchema = z.string().uuid({
+    message: "An invalid UUID was passed."
+});
 
 const usersSlice = createSlice({
     name: 'users',
     initialState,
     reducers: {
-        //fill users
+        //fill users array with passed data, rewriting the old array 
         fillUsers: (state, action: PayloadAction<User[]>) => {
             state.users = [];
             action.payload.map((user) => {
@@ -23,13 +27,11 @@ const usersSlice = createSlice({
             });
         },
         
-        //add user
         addUser: (state, action: PayloadAction<User>) => {
             let randomUserId = crypto.randomUUID();
             state.users.push({...action.payload,id:randomUserId});
         },
 
-        //update user
         updateUser: (state, action: PayloadAction<User>) => {
             const index = state.users.findIndex(user => user.id === action.payload.id);
             if(index !== -1){
@@ -37,14 +39,11 @@ const usersSlice = createSlice({
             }
         },
 
-        //delete user
         deleteUser: (state, action: PayloadAction<string>) => {
-            state.users = state.users.filter(user => user.id !== action.payload);
-
-            //add checking with zod?
+            let parsedId = emailSchema.safeParse(action.payload);
+            parsedId.success ? state.users = state.users.filter(user => user.id !== action.payload) : console.log("Error in user deletion: " + parsedId.error);
         },
 
-        //sort users
         sortUsers: (state, action: PayloadAction<string>) => {
             state.users = state.users.sort((a,b) => {
                   if(action.payload==="id")
