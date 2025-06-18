@@ -48,8 +48,7 @@ export default function UsersTable(){
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
-                            <TableRowActions user={user}/> 
-                            {/* do these gotta be changed as well? */}
+                            <TableRowActions user={user}/>
                         </TableRow>)
                 }
                 </TableBody>
