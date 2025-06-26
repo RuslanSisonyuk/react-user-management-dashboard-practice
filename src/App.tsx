@@ -2,24 +2,16 @@ import './App.css';
 import Navbar from './components/ui/Navbar';
 import { Toaster } from 'sonner';
 import UsersTable from './components/UsersTable';
-import { users } from './data/user_data';
-import { User,userSchema } from './types/userType';
+import { parsedUsers } from './data/user_data';
 import { useEffect  } from 'react';
 import { fillUsers } from './state/users/usersSlice';
 import { useDispatch } from 'react-redux';
-
-function parseUsers(users:User[]){
-  return users.filter((user)=>{
-    const result = userSchema.safeParse(user);
-    return result.success;
-  })
-}
 
 function App() {
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(fillUsers(parseUsers(users)));
+    dispatch(fillUsers(parsedUsers));
   },[]);
 
   return(

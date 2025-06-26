@@ -1,6 +1,6 @@
-import { User } from "@/types/userType" 
+import { User, userRoles, userSchema } from "@/types/userType" 
 
-export const users:User[] = [
+const users:User[] = [
     {
         "id": "invalid-idlmao",
         "name": "Grigore Ceban",
@@ -80,3 +80,19 @@ export const users:User[] = [
         "role": "Viewer"
     }
 ]
+
+function resolveDuplicateId(user:User, currentIndex:Number){
+    if( users.findIndex( User => User.id == user.id ) != currentIndex ) {
+      console.warn("Duplicate Id at Index: " + currentIndex);
+      return { ...user, id: crypto.randomUUID() }
+    }
+    return user;
+  }
+  function parseUsers(){
+    return users.filter((user)=>{
+      const result = userSchema.safeParse(user);
+      return result.success;
+    })
+  }
+
+export const parsedUsers:User[] = parseUsers().map( (user,index) => resolveDuplicateId(user, index));
