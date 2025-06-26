@@ -1,4 +1,6 @@
-[
+import { User, userSchema } from "@/types/userType" 
+
+const users:User[] = [
     {
         "id": "invalid-idlmao",
         "name": "Grigore Ceban",
@@ -39,19 +41,13 @@
         "id": "f88f50f0-d3e3-4a6d-bdb5-97eb036d9262",
         "name": "name2",
         "email": "mylongEmail@gmail.com",
-        "role": "Nope"
+        "role": "Admin"
     },
     {
         "id": "8ccaad75-19cc-4d8b-9020-6bc916a154f2",
         "name": "name3",
         "email": "mylongEmail@gmail.com",
         "role": "Viewer"
-    },
-    {
-        "id": "b9e10cb9-be31-4cc1-aa2d-eeee07854b19",
-        "name": "Longer name 4",
-        "email": "mylongEmail2@gmail.com",
-        "role": "WRONG ROLE!"
     },
     {
         "id": "01416178-706b-4db1-8aeb-9575a584e017",
@@ -75,7 +71,7 @@
         "id": "f88f50f0-d3e3-4a6d-bdb5-97eb036d9262",
         "name": "name2",
         "email": "mylongEmail@gmail.com",
-        "role": "Nope"
+        "role": "Viewer"
     },
     {
         "id": "8ccaad75-19cc-4d8b-9020-6bc916a154f2",
@@ -84,3 +80,24 @@
         "role": "Viewer"
     }
 ]
+
+
+function parseUsers(){
+    let tempUsers:User[] = [];
+
+    return users
+    .filter((user)=>{ //parse through
+        const result = userSchema.safeParse(user);
+        return result.success;
+    })
+    .map((user,index) => { //find duplicate id's and assign new ones
+        if(tempUsers.find(u => u.id === user.id)){
+            console.warn("Duplicate Id at Index: " + index);
+            return { ...user, id: crypto.randomUUID() };
+        }
+        tempUsers.push(user);
+        return user;
+    })
+}
+
+export const parsedUsers:User[] = parseUsers();
