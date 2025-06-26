@@ -1,6 +1,5 @@
 import { User, Users } from "@/types/userType";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { toast } from "sonner";
 import { z } from "zod";
 
 const initialState: Users = {
@@ -22,19 +21,11 @@ const usersSlice = createSlice({
     reducers: {
         //fill users array with passed data, rewriting the old array 
         fillUsers: (state, action: PayloadAction<User[]>) => {
-            state.users = [];
-            action.payload.map((user) => {
-                state.users.push(user);
-            });
+            state.users = action.payload;
         },
         
         addUser: (state, action: PayloadAction<User>) => {
-            let randomUserId = crypto.randomUUID();
-            state.users.push({...action.payload,id:randomUserId});
-
-            toast("New User Data Successfuly Added", {
-                description: action.payload.name+", "+action.payload.email+", "+action.payload.role
-            });
+            state.users.push(action.payload);
         },
 
         updateUser: (state, action: PayloadAction<User>) => {
@@ -42,10 +33,6 @@ const usersSlice = createSlice({
             if(index !== -1){
                 state.users[index] = action.payload
             }
-
-            toast("User Data Successfuly Changed", {
-                description: action.payload.name+", "+action.payload.email+", "+action.payload.role
-            });
         },
 
         deleteUser: (state, action: PayloadAction<string>) => {
@@ -56,23 +43,23 @@ const usersSlice = createSlice({
             };
 
             state.users = state.users.filter(user => user.id !== action.payload);
-            toast("User Data Successfuly Deleted. ", {
-                description: "User ID: " + action.payload
-            });
         },
 
         sortUsers: (state, action: PayloadAction<string>) => {
             state.users = state.users.sort((a,b) => {
-                  if(action.payload==="id")
+                switch(action.payload){
+                  case "id":
                     return a.id.localeCompare(b.id);
-                  if(action.payload==="name")
+                  case "name":
                     return a.name.localeCompare(b.name);
-                  if(action.payload==="email")
+                  case "email":
                     return a.email.localeCompare(b.email);
-                  if(action.payload==="role")
+                  case "role":
                     return a.role.localeCompare(b.role);
-                  return a.name.localeCompare(b.name);
-                });
+                  default:
+                    return a.name.localeCompare(b.name);
+                }
+            });
         }
     }
 });

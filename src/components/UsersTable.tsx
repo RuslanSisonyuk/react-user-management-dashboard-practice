@@ -7,7 +7,8 @@ import { UsersSearchbar } from "./UsersSearchbar";
 
 import { RootState } from "@/state/store";
 import { useSelector, useDispatch } from "react-redux";
-import { sortUsers } from "@/state/users/usersSlice";
+import { addUser, deleteUser, sortUsers, updateUser } from "@/state/users/usersSlice";
+import { toast } from "sonner";
 
 
 
@@ -18,6 +19,31 @@ export default function UsersTable(){
     const users = useSelector((state:RootState) => state.usersState.users);
     const dispatch = useDispatch();
     
+    const onSubmitAddUser = (values: User) => {
+        let randomUserId = crypto.randomUUID();
+        dispatch(addUser({ ...values, id:randomUserId }));
+
+        toast("New User Data Successfuly Added", {
+            description: values.name+", "+values.email+", "+values.role
+        });
+    }
+
+    const onSubmitUpdateUser = (values: User) => {
+        dispatch(updateUser(values));
+
+        toast("User Data Successfuly Changed", {
+            description: values.name+", "+values.email+", "+values.role
+        });
+    }
+
+    const onSubmitDeleteUser = (values: User) => {
+        dispatch(deleteUser(values.id));
+
+        toast("User Data Successfuly Deleted", {
+            description: values.name+", "+values.email+", "+values.role
+        });
+    }
+
     // Checks if provided user's property (name or email based on filter type) starts with string inputed by user 
     const isUserStartsWithFilterString = (user:User) => {
         return filterType == "Email" ? user.email.toLowerCase().startsWith(filterUsersByString.toLowerCase()) 
@@ -28,7 +54,7 @@ export default function UsersTable(){
         <div className='flex flex-col px-9'>
             <div className='flex flex-row w-full max-w-[1000px] gap-[15px]'>
                 <UsersSearchbar filterValue={filterUsersByString} setFilterValue={setFilterUsersByString} setFilterType={setfilterType}/>
-                <UserFormDialog/>
+                <UserFormDialog type="ADD" onSubmit={onSubmitAddUser}/>
             </div>
     
             <Table>
@@ -48,7 +74,7 @@ export default function UsersTable(){
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role}</TableCell>
-                            <TableRowActions user={user}/>
+                            <TableRowActions user={user} onEdit={onSubmitUpdateUser} onDelete={onSubmitDeleteUser}/>
                         </TableRow>)
                 }
                 </TableBody>

@@ -9,27 +9,21 @@ import { Input } from './input';
 import { Button } from './button';
 import { userRoles, User, userSchema } from '@/types/userType';
 
-import { useDispatch } from "react-redux";
-import { addUser, updateUser } from "@/state/users/usersSlice";
-
-
 enum FormType {
   edit = "EDIT",
   add = "ADD"
 }
 interface UserProps{
-    // onSubmit: (values:User) => void;
     type?: string; // !! Later changed to be required
     userAttributes?: User;
+    onSubmit: (values: User) => void;
 }
 const defaultUser:User = {id:"4a9c54a0-4eed-454b-9485-4baba9826f83",name:"",email:"",role:userRoles.Values.Viewer};  
 const defaultType:string = FormType.add;
 
 //form defaults to the "add user" form
-export default function UserFormDialog({userAttributes=defaultUser,type=defaultType}:UserProps){
+export default function UserFormDialog({ type=defaultType,userAttributes=defaultUser,onSubmit }:UserProps){
     const [isOpen,setOpen] = useState(false);
-
-    const dispatch = useDispatch();
 
     const form = useForm<z.infer<typeof userSchema>>({
         resolver: zodResolver(userSchema),
@@ -43,14 +37,10 @@ export default function UserFormDialog({userAttributes=defaultUser,type=defaultT
     
     //executes the provided function passing the values from the form, rests the form fields and closes the form
     function handleFormSubmit(values:z.infer<typeof userSchema>){
-        // onSubmit({...values,id:userAttributes.id});
-        if(type === FormType.edit) dispatch(updateUser(values));
-        else if (type === FormType.add) dispatch(addUser(values));
-        else console.error("Invalid Form Type");
-        //Later change to require either ADD or EDIT, give Alert in other case
-
-        if(type!=FormType.edit) form.reset();
-        setOpen(false);
+      onSubmit({ ...values });
+      form.reset();
+      //Later change to require either ADD or EDIT, give Alert in other case
+      setOpen(false);
     }
 
 
