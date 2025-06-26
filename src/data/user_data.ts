@@ -1,4 +1,4 @@
-import { User, userRoles, userSchema } from "@/types/userType" 
+import { User, userSchema } from "@/types/userType" 
 
 const users:User[] = [
     {
@@ -81,18 +81,23 @@ const users:User[] = [
     }
 ]
 
-function resolveDuplicateId(user:User, currentIndex:Number){
-    if( users.findIndex( User => User.id == user.id ) != currentIndex ) {
-      console.warn("Duplicate Id at Index: " + currentIndex);
-      return { ...user, id: crypto.randomUUID() }
-    }
-    return user;
-  }
-  function parseUsers(){
-    return users.filter((user)=>{
-      const result = userSchema.safeParse(user);
-      return result.success;
-    })
-  }
 
-export const parsedUsers:User[] = parseUsers().map( (user,index) => resolveDuplicateId(user, index));
+function parseUsers(){
+    let tempUsers:User[] = [];
+
+    return users
+    .filter((user)=>{ //parse through
+        const result = userSchema.safeParse(user);
+        return result.success;
+    })
+    .map((user,index) => { //find duplicate id's and assign new ones
+        if(tempUsers.find(u => u.id === user.id)){
+            console.warn("Duplicate Id at Index: " + index);
+            return { ...user, id: crypto.randomUUID() };
+        }
+        tempUsers.push(user);
+        return user;
+    })
+}
+
+export const parsedUsers:User[] = parseUsers();
